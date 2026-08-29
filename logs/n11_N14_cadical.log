@@ -1,0 +1,124 @@
+c --- [ banner ] -------------------------------------------------------------
+c 
+c CaDiCaL SAT Solver
+c Copyright (c) 2016-2026
+c A. Biere, M. Fleury, N. Froleyks, K. Fazekas, F. Pollitt, T. Faller
+c JKU Linz, University of Freiburg, TU Wien
+c 
+c Version 3.0.1
+c g++.exe (Rev3, Built by MSYS2 project) 16.2.0 -Wall -Wextra -O3 -DNDEBUG -DNUNLOCKED -DNCLOSEFROM
+c Sat Aug 29 18:00:44 CST 2026 MINGW64_NT-10.0-26200 LAPTOP-TRJ5SOMK 3.6.10-8fbd9808.x86_64 x86_64
+c 
+c --- [ proof tracing ] ------------------------------------------------------
+c 
+c opening file to write 'E:/OrderedRamseyZ3/proofs/n11_N14_ascii.drat'
+c writing non-binary proof trace to 'E:/OrderedRamseyZ3/proofs/n11_N14_ascii.drat'
+c 
+c --- [ parsing input ] ------------------------------------------------------
+c 
+c reading DIMACS file from 'E:/OrderedRamseyZ3/cnf/n11_N14.cnf'
+c opening file to read 'E:/OrderedRamseyZ3/cnf/n11_N14.cnf'
+c found 'p cnf 91 728' header
+c parsed 728 clauses in 0.02 seconds process time
+c 
+c --- [ options ] ------------------------------------------------------------
+c 
+c   --binary=false                 (different from default 'true')
+c 
+c --- [ solving ] ------------------------------------------------------------
+c 
+c time measured in process time since initialization
+c 
+c  seconds  reduction conflicts       size tier2     variables
+c         MB    restarts   redundant    glue  trail      remaining
+c          level     rate       size/glu tier1 irredundant
+c 
+c *  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  728  90 99%
+c )  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  728  90 99%
+c {  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  728  90 99%
+c -  0.02  6 31 1   0  1  300  122 1.4 11 8 2 6 86%  728  90 99%
+c -  0.02  6 26 2   8  1  735  331 1.5 10 7 2 6 83%  728  90 99%
+c i  0.02  6 23 2   8  1  862  368 1.5 10 7 2 6 81%  728  89 98%
+c }  0.02  6 21 2   8  1 1002  430 1.5 9 6 2 6 80%  728  89 98%
+c [  0.02  6  0 2   8  0 1002  430 0.0 0 0 2 6  0%  728  89 98%
+c O  0.02  6 47 2   8 48 1003  431 1.1 8 7 2 6 74%  728  89 98%
+c -  0.02  6 23 3   8  1 1413  533 1.6 10 6 2 6 73%  719  89 98%
+c i  0.02  7 20 3   8  1 1743  745 1.6 9 6 2 6 71%  719  85 93%
+c i  0.02  7 20 3   8  1 1756  752 1.6 9 6 2 6 70%  719  83 91%
+c i  0.02  7 20 3   8  1 1758  752 1.6 9 6 2 6 70%  719  82 90%
+c i  0.02  7 20 3   8  1 1763  751 1.6 9 6 2 6 70%  719  72 79%
+c i  0.02  7 20 3   8  1 1764  751 1.6 9 6 2 6 70%  719  69 76%
+c ]  0.03  7 20 3   8  1 1766  751 1.6 9 6 2 6 70%  719  49 54%
+c 0  0.03  7 20 3   8  1 1766  751 1.6 9 6 2 6 70%  719  49 54%
+c 
+c --- [ closing proof ] ------------------------------------------------------
+c 
+c DRAT proof file 'E:/OrderedRamseyZ3/proofs/n11_N14_ascii.drat' closed
+c DRAT 1969 added clauses 62.43%
+c DRAT 1185 deleted clauses 37.57%
+c DRAT 121884 bytes (0.12 MB)
+c 
+c --- [ result ] -------------------------------------------------------------
+c 
+s UNSATISFIABLE
+c 
+c --- [ run-time profiling ] -------------------------------------------------
+c 
+c process time taken by individual solving procedures
+c (percentage relative to process time for solving)
+c 
+c         0.02  100.00% parse
+c         0.02  100.00% search
+c         0.02  100.00% stable
+c         0.00    0.00% simplify
+c   =================================
+c         0.02   50.00% solve
+c 
+c last line shows process time for solving
+c (percentage relative to total process time)
+c 
+c --- [ statistics ] ---------------------------------------------------------
+c 
+c chronological:               235        13.31 %  of conflicts
+c conflicts:                  1766    113024.00    per second
+c backbone:                   1268      1393.41 %  of vars
+c decisions:                  1934    123776.00    per second
+c fixed:                        41        45.05 %  of all variables
+c learned:                    1632        92.41 %  per conflict
+c learned_lits:              20230       100.00 %  learned literals
+c minimized:                     0         0.00 %  learned literals
+c shrunken:                   4310        21.30 %  learned literals
+c minishrunken:                732         3.62 %  learned literals
+c otfs:                        109         6.17 %  of conflict
+c propagations:              29635         1.90 M  per second
+c reduced:                     254        14.38 %  per conflict
+c rephased:                      1      1766.00    interval
+c restarts:                      8       220.75    interval
+c stabilizing:                   1        41.62 %  of conflicts
+c subsumed:                    531        22.57 %  of all clauses
+c strengthened:                105         4.46 %  of all clauses
+c ticks:                    417948        14.83    propagation
+c 
+c seconds are measured in process time for solving
+c 
+c --- [ glue usage ] ---------------------------------------------------------
+c 
+c focused glue 2 used 178 clauses 10.09% accumulated 14.45% tier1
+c focused glue 3 used 302 clauses 17.12% accumulated 31.57%
+c focused glue 4 used 293 clauses 16.60% accumulated 48.18%
+c focused glue 5 used 237 clauses 13.43% accumulated 61.62%
+c focused glue 6 used 177 clauses 10.03% accumulated 71.65% tier2
+c 
+c stable glue 4 used 418 clauses 22.06% accumulated 63.88% tier1
+c stable glue 5 used 239 clauses 12.61% accumulated 76.50% tier2
+c 
+c 
+c --- [ resources ] ----------------------------------------------------------
+c 
+c total process time since initialization:         0.03    seconds
+c total real time since initialization:            0.02    seconds
+c maximum resident set size of process:            6.57    MB
+c 
+c --- [ shutting down ] ------------------------------------------------------
+c 
+c exit 20

@@ -1,0 +1,45 @@
+Ordered Ramsey Z3 computation
+======================================================================
+
+[Environment]
+Python version: 3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit (AMD64)]
+Python executable: E:\.venv\Scripts\python.exe
+Z3 version: 4.16.0
+Operating system: Windows 11
+Platform: Windows-11-10.0.26200-SP0
+Machine: AMD64
+Processor: AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD
+
+[Parameters]
+n = 10
+N = 12
+
+[Boolean convention]
+True = blue edge
+False = red edge
+
+[Result]
+Status = SAT
+Total rounds = 7
+Added blue alternating-path blocking constraints = 6
+Running time = 0.011392 seconds
+
+[Coloring]
+Number of red edges = 11
+Number of blue edges = 55
+
+[Red edges, 1-based indexing]
+1 11
+2 12
+3 11
+4 8
+5 12
+6 7
+7 9
+8 12
+9 12
+10 12
+11 12
+
+[Red edges, LaTeX format]
+(1,11),\ (2,12),\ (3,11),\ (4,8),\ (5,12),\ (6,7),\ (7,9),\ (8,12),\ (9,12),\ (10,12),\ (11,12)
