@@ -1,0 +1,165 @@
+Computational environment
+=========================
+
+Project:
+Reproducible computations for ordered Ramsey numbers
+R_<(S_{1,3}, (P_n, triangleleft_alt))
+
+
+1. Operating system
+-------------------
+
+Microsoft Windows 11 Home, Chinese edition
+Version: 10.0.26200
+Build: 26200
+
+
+2. Hardware
+-----------
+
+CPU:
+AMD Ryzen 5 4600U with Radeon Graphics
+
+Physical memory:
+16505954304 bytes
+approximately 15.37 GiB
+nominally 16 GB RAM
+
+
+3. Python and Z3
+----------------
+
+Python:
+3.13.5
+
+Z3:
+4.16.0
+
+The exploratory SAT computations and lower-bound witnesses were
+obtained using Python and the z3-solver Python package.
+
+
+4. CaDiCaL
+----------
+
+CaDiCaL version:
+2.0.1
+
+CaDiCaL was used as the proof-producing SAT solver for the
+UNSAT upper-bound instances.
+
+Textual DRAT proofs were generated using the option:
+
+--no-binary
+
+A typical command was:
+
+cadical --no-binary INPUT.cnf PROOF.drat
+
+For example:
+
+cadical --no-binary cnf/n16_N20.cnf proofs/n16_N20_ascii.drat
+
+
+5. DRAT-trim
+------------
+
+DRAT-trim source:
+https://github.com/marijnheule/drat-trim
+
+Source snapshot:
+master branch, commit 2e3b2dc
+commit date: 2024-11-25
+
+DRAT-trim was compiled under MSYS2 UCRT64.
+
+Compiler:
+GCC 16.2.0
+
+Because getc_unlocked is not directly available in this Windows/MSYS2
+environment, DRAT-trim was compiled with:
+
+gcc drat-trim.c -std=c99 -O2 -Dgetc_unlocked=getc -o drat-trim
+
+A typical proof-verification command was:
+
+drat-trim INPUT.cnf PROOF.drat
+
+For example:
+
+drat-trim cnf/n16_N20.cnf proofs/n16_N20_ascii.drat
+
+A successful verification terminates with:
+
+s VERIFIED
+
+
+6. Batch verification
+---------------------
+
+The script
+
+verify_all_unsat.sh
+
+was used to generate textual DRAT certificates with CaDiCaL and
+independently verify them with DRAT-trim.
+
+The verified upper-bound instances are the 18 cases corresponding to
+
+n = 3, 4, ..., 20.
+
+Final batch-verification result:
+
+VERIFIED = 18
+FAILED   = 0
+
+The complete summary is stored in:
+
+logs/verification_summary.csv
+
+Individual CaDiCaL and DRAT-trim transcripts are stored in:
+
+logs/
+
+
+7. Generated certificates
+-------------------------
+
+DIMACS CNF instances are stored in:
+
+cnf/
+
+The corresponding textual DRAT certificates are stored in:
+
+proofs/
+
+The DRAT files are stored in the GitHub repository using Git LFS.
+
+
+8. Running times
+----------------
+
+Running times for the individual computations are recorded in the
+corresponding output and log files in:
+
+results/
+logs/
+
+The DRAT-trim verification logs contain the independent proof-checking
+times for the UNSAT certificates.
+
+
+9. Reproducibility
+------------------
+
+For an asserted exact Ramsey value R:
+
+- a satisfying coloring on K_{R-1} supplies the computational
+  lower-bound witness;
+
+- an UNSAT DIMACS instance on K_R, together with a DRAT certificate
+  independently accepted by DRAT-trim, supplies the computational
+  upper-bound certificate.
+
+Thus the SAT witnesses and independently checked UNSAT certificates
+together certify the reported computational exact values.
