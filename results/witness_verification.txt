@@ -1,0 +1,28 @@
+======================================================================
+Batch verification of SAT witnesses
+======================================================================
+n10_N12_SAT.txt: VERIFIED
+n11_N13_SAT.txt: VERIFIED
+n12_N14_SAT.txt: VERIFIED
+n13_N16_SAT.txt: VERIFIED
+n14_N17_SAT.txt: VERIFIED
+n15_N18_SAT.txt: VERIFIED
+n16_N19_SAT.txt: VERIFIED
+n17_N20_SAT.txt: VERIFIED
+n18_N21_SAT.txt: VERIFIED
+n19_N22_SAT.txt: VERIFIED
+n20_N23_SAT.txt: VERIFIED
+n3_N4_SAT.txt: VERIFIED
+n4_N5_SAT.txt: VERIFIED
+n5_N6_SAT.txt: VERIFIED
+n6_N7_SAT.txt: VERIFIED
+n7_N9_SAT.txt: VERIFIED
+n8_N10_SAT.txt: VERIFIED
+n9_N11_SAT.txt: VERIFIED
+
+======================================================================
+Finished
+======================================================================
+VERIFIED = 18
+FAILED   = 0
+======================================================================
