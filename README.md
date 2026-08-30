@@ -1,4 +1,4 @@
-# Reproducible computations for ordered Ramsey numbers
+# Ordered Ramsey numbers for alternating paths and stars
 
 This repository contains the computational material used to verify exact small values for the ordered Ramsey problem
 
