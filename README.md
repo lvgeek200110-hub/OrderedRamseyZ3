@@ -1,153 +1,96 @@
 # Reproducible computations for ordered Ramsey numbers
 
-This repository contains the computational material for the ordered Ramsey problem
+This repository contains the computational material used to verify exact small values for the ordered Ramsey problem
 
 \[
 R_<\bigl(\mathcal S_{1,3},(\mathcal P_n,\triangleleft_{\mathrm{alt}})\bigr).
 \]
 
-The repository provides the source code, computational results, CNF instances, DRAT certificates, solver/checker logs, and summary tables used to support the small-parameter exact values for `3 <= n <= 20`.
+The repository is designed so that the computational lower bounds and upper bounds can be checked independently:
 
-The main reproducibility chain is
+- **Lower bounds** are supported by explicit SAT coloring witnesses.
+- **Upper bounds** are supported by DIMACS CNF instances, CaDiCaL-generated textual DRAT certificates, and independent verification with DRAT-trim.
 
-```text
-Python/Z3 search
-    -> SAT lower-bound coloring or UNSAT candidate
-    -> DIMACS CNF generation
-    -> CaDiCaL 2.0.1
-    -> textual DRAT certificate
-    -> independent verification with DRAT-trim
-```
+For the 18 cases \(3\le n\le 20\), the repository currently contains
 
-For the 18 upper-bound instances corresponding to `n = 3,...,20`, all DRAT certificates were independently checked successfully:
+- **18/18 SAT witnesses independently verified**;
+- **18/18 UNSAT certificates independently verified**.
 
-```text
-VERIFIED = 18
-FAILED   = 0
-```
-
-The verification summary is stored in `logs/verification_summary.csv`.
+---
 
 ## 1. Boolean convention
 
-For every edge `1 <= i < j <= N`, introduce one Boolean variable `x_{i,j}`.
+For every edge \(1\le i<j\le N\), use one Boolean variable \(x_{i,j}\).
 
-- `x_{i,j} = True` means that edge `ij` is **blue**.
-- `x_{i,j} = False` means that edge `ij` is **red**.
+- `True` means that edge \(ij\) is **blue**.
+- `False` means that edge \(ij\) is **red**.
 
-The same convention is used by the Z3 program and by the DIMACS CNF generator.
+The same convention is used by the Python/Z3 code and by the DIMACS CNF generator.
 
-## 2. SAT/CNF encoding
+---
 
-For fixed `n` and `N`, the formula is satisfiable if and only if there exists a red/blue coloring of the ordered complete graph `K_N` containing neither a red `S_{1,3}` nor a blue alternating `P_n`.
+## 2. CNF encoding
 
-### 2.1 No red `S_{1,3}`
+For fixed \(n\) and \(N\), the CNF is satisfiable if and only if there exists a red/blue coloring of the ordered complete graph \(K_N\) containing neither a red \(\mathcal S_{1,3}\) nor a blue alternating \((\mathcal P_n,\triangleleft_{\mathrm{alt}})\).
 
-For every `i < j < k`, add
+### 2.1 No red \(\mathcal S_{1,3}\)
+
+For every \(i<j<k\), add the clause
 
 \[
 x_{i,j}\lor x_{i,k}.
 \]
 
-Since `False` means red, this prevents the two edges `ij` and `ik` from being red simultaneously. Equivalently, every vertex has at most one red edge to its right.
+Because `False` means red, this clause prevents both \(ij\) and \(ik\) from being red. Equivalently, every vertex has at most one red edge to its right.
 
-### 2.2 No blue alternating `P_n`
+### 2.2 No blue alternating \((\mathcal P_n,\triangleleft_{\mathrm{alt}})\)
 
-For every increasing `n`-set
+For every increasing \(n\)-set
 
 \[
 v_1<\cdots<v_n,
 \]
 
-the alternating path uses exactly the pairs of positions `a<b` satisfying
+the alternating path uses precisely the pairs of positions \(a<b\) satisfying
 
 \[
 a+b\in\{n+1,n+2\}.
 \]
 
-For every such `n`-set, add
+For each such \(n\)-set, add the clause
 
 \[
 \bigvee_{\substack{1\le a<b\le n\\a+b\in\{n+1,n+2\}}}
 \neg x_{v_a,v_b}.
 \]
 
-Thus at least one edge of every candidate alternating path is red, so no candidate is entirely blue.
+Thus at least one required alternating-path edge is red, so the candidate path is not entirely blue.
 
-The number of graph variables and clauses is
+The total numbers of graph variables and clauses are
 
 \[
 \binom{N}{2}
-\quad\text{and}\quad
+\qquad\text{and}\qquad
 \binom{N}{3}+\binom{N}{n},
 \]
 
 respectively.
 
-For example, for `(n,N)=(16,20)`, the generated CNF contains
+---
 
-```text
-Variables = 190
-Red-star clauses = 1140
-Alternating-path clauses = 4845
-Total clauses = 5985
-```
-
-## 3. Exact values checked computationally
-
-The computations cover the following exact values:
-
-| `n` | exact value |
-|---:|---:|
-| 3 | 5 |
-| 4 | 6 |
-| 5 | 7 |
-| 6 | 8 |
-| 7 | 10 |
-| 8 | 11 |
-| 9 | 12 |
-| 10 | 13 |
-| 11 | 14 |
-| 12 | 15 |
-| 13 | 17 |
-| 14 | 18 |
-| 15 | 19 |
-| 16 | 20 |
-| 17 | 21 |
-| 18 | 22 |
-| 19 | 23 |
-| 20 | 24 |
-
-For each claimed exact value `R`, two instances are recorded:
-
-- `N = R-1`: SAT, giving an avoiding coloring and hence the lower bound;
-- `N = R`: UNSAT, with a DRAT certificate independently verified by DRAT-trim.
-
-Thus the computational certification principle is
-
-```text
-SAT at N = R-1  ->  R_< >= R
-verified UNSAT at N = R  ->  R_< <= R
-```
-
-and together these certify the exact value.
-
-## 4. Repository structure
+## 3. Repository structure
 
 ```text
 OrderedRamseyZ3/
 ├── README.md
+├── environment.txt
 ├── generate_cnf.py
 ├── ramsey_z3_batch_autosave.py
 ├── summarize_results.py
+├── verify_witness.py
+├── verify_all_witnesses.py
 ├── verify_all_unsat.sh
-│
-├── results/
-│   ├── computational_results.csv
-│   ├── n3_N4_SAT.txt
-│   ├── n3_N5_UNSAT.txt
-│   ├── ...
-│   └── n20_N24_UNSAT.txt
+├── .gitattributes
 │
 ├── cnf/
 │   ├── n3_N5.cnf
@@ -159,165 +102,300 @@ OrderedRamseyZ3/
 │   ├── ...
 │   └── n20_N24_ascii.drat
 │
-└── logs/
-    ├── verification_summary.csv
-    ├── n3_N5_cadical.log
-    ├── n3_N5_drat_trim.log
-    ├── ...
-    └── n20_N24_drat_trim.log
+├── logs/
+│   ├── verification_summary.csv
+│   ├── *_cadical.log
+│   └── *_drat_trim.log
+│
+└── results/
+    ├── *_SAT.txt
+    ├── *_UNSAT.txt
+    ├── computational_results.csv
+    └── witness_verification.txt
 ```
 
-The third-party source directories used locally to compile CaDiCaL and DRAT-trim are not required to be included in the repository. Their versions/commits should instead be recorded in the computational environment information.
+The DRAT files are stored using **Git LFS** because the largest certificates exceed the ordinary GitHub file-size limit.
 
-## 5. Main files
+---
 
-### `ramsey_z3_batch_autosave.py`
+## 4. Computational environment
 
-Runs the original lazy-constraint Z3 search. It checks whether an avoiding coloring exists and records:
+The exact environment used for the reported computations is recorded in
 
-- SAT / UNSAT / UNKNOWN status;
-- number of lazy rounds;
-- number of added blue-path blocking constraints;
-- running time;
-- SAT colorings, including the red-edge list.
+```text
+environment.txt
+```
 
-The Z3 convention is `True = blue`, `False = red`.
+The recorded setup includes:
 
-### `generate_cnf.py`
+- Microsoft Windows 11 Home, Chinese edition, version 10.0.26200;
+- AMD Ryzen 5 4600U with Radeon Graphics;
+- 16 GB RAM;
+- Python 3.13.5;
+- Z3 4.16.0;
+- CaDiCaL 2.0.1;
+- GCC 16.2.0;
+- DRAT-trim from the `master` branch at commit `2e3b2dc` (2024-11-25).
 
-Generates the 18 DIMACS CNF instances corresponding to the claimed upper bounds for `3 <= n <= 20`.
+CaDiCaL is used as the proof-producing SAT solver for the UNSAT upper-bound instances. Textual DRAT proofs are generated with
 
-Run with
+```text
+--no-binary
+```
+
+DRAT-trim is used as an independent proof checker.
+
+---
+
+## 5. Generate all upper-bound CNF instances
+
+Run
 
 ```bash
 python generate_cnf.py
 ```
 
-The generated files are written to `cnf/`.
-
-### `summarize_results.py`
-
-Reads the individual computation records in `results/` and creates
+The script generates all 18 upper-bound DIMACS instances for \(3\le n\le 20\) and writes them to
 
 ```text
-results/computational_results.csv
+cnf/
 ```
 
-which summarizes the parameters, expected status, actual status, number of rounds, number of blocking constraints, and running times.
+The script is path-independent: it uses the directory containing `generate_cnf.py` as the repository root.
 
-### `verify_all_unsat.sh`
+For example, the final case is generated as
 
-Runs CaDiCaL on every upper-bound CNF instance, writes textual DRAT proofs, and checks every proof independently with DRAT-trim.
+```text
+cnf/n20_N24.cnf
+```
 
-Run from MSYS2 UCRT64 with
+with 276 Boolean edge variables and 12,650 clauses.
+
+---
+
+## 6. Verify one SAT lower-bound witness
+
+A SAT result file lists the red edges of an avoiding coloring. Every unlisted edge is blue.
+
+For example:
 
 ```bash
-cd /e/OrderedRamseyZ3
+python verify_witness.py results/n4_N5_SAT.txt
+```
+
+The verifier independently checks:
+
+1. that no vertex has two red edges to its right, hence there is no red \(\mathcal S_{1,3}\);
+2. every increasing \(n\)-vertex subset, to confirm that none induces a blue alternating \((\mathcal P_n,\triangleleft_{\mathrm{alt}})\).
+
+A valid witness ends with
+
+```text
+VERIFIED WITNESS
+```
+
+The verifier does **not** use Z3.
+
+---
+
+## 7. Verify all SAT lower-bound witnesses
+
+Run
+
+```bash
+python verify_all_witnesses.py
+```
+
+The script independently verifies every `*_SAT.txt` file in `results/` and writes the summary to
+
+```text
+results/witness_verification.txt
+```
+
+The current result is
+
+```text
+VERIFIED = 18
+FAILED   = 0
+```
+
+Thus all 18 lower-bound coloring witnesses for \(3\le n\le 20\) pass the independent checker.
+
+---
+
+## 8. Produce and verify all UNSAT upper-bound certificates
+
+The publication-grade upper-bound route is
+
+```text
+DIMACS CNF
+    ↓
+CaDiCaL
+    ↓
+textual DRAT certificate
+    ↓
+DRAT-trim
+    ↓
+VERIFIED
+```
+
+The batch script is
+
+```text
+verify_all_unsat.sh
+```
+
+It is path-independent and expects CaDiCaL and DRAT-trim either to be available in `PATH` or to be supplied through environment variables.
+
+### If both programs are in `PATH`
+
+```bash
 bash verify_all_unsat.sh
 ```
 
-The script creates/updates `proofs/` and `logs/` and produces
+### If explicit executable paths are needed
 
-```text
-logs/verification_summary.csv
+```bash
+CADICAL=/path/to/cadical \
+DRATTRIM=/path/to/drat-trim \
+bash verify_all_unsat.sh
 ```
 
-A successful complete run ends with
+For each of the 18 upper-bound instances, the script:
+
+1. reads the corresponding CNF from `cnf/`;
+2. runs CaDiCaL with `--no-binary`;
+3. writes a textual DRAT proof to `proofs/`;
+4. records the CaDiCaL transcript in `logs/`;
+5. checks the proof with DRAT-trim;
+6. records the DRAT-trim transcript in `logs/`;
+7. writes the final batch summary to `logs/verification_summary.csv`.
+
+The current result is
 
 ```text
 VERIFIED = 18
 FAILED   = 0
 ```
 
-## 6. SAT lower-bound witnesses
+A solver log that merely states `UNSATISFIABLE` is not treated as the proof. The independently checked DRAT certificate is the checkable UNSAT evidence.
 
-For a SAT instance `N=R-1`, the corresponding file in `results/` contains the red-edge list using 1-based vertex numbering. All unlisted edges are blue.
+---
 
-For example, `results/n16_N19_SAT.txt` records an avoiding coloring on `K_19`, certifying
+## 9. Claimed exact values and corresponding certificates
+
+For each exact value \(R\), the repository supplies
+
+- a SAT coloring witness on \(K_{R-1}\), proving \(R_<\ge R\);
+- a verified UNSAT certificate for the CNF on \(K_R\), proving \(R_<\le R\).
+
+| \(n\) | Claimed exact value \(R\) | SAT lower witness | UNSAT upper instance |
+|---:|---:|---|---|
+| 3 | 5 | `results/n3_N4_SAT.txt` | `cnf/n3_N5.cnf` |
+| 4 | 6 | `results/n4_N5_SAT.txt` | `cnf/n4_N6.cnf` |
+| 5 | 7 | `results/n5_N6_SAT.txt` | `cnf/n5_N7.cnf` |
+| 6 | 8 | `results/n6_N7_SAT.txt` | `cnf/n6_N8.cnf` |
+| 7 | 10 | `results/n7_N9_SAT.txt` | `cnf/n7_N10.cnf` |
+| 8 | 11 | `results/n8_N10_SAT.txt` | `cnf/n8_N11.cnf` |
+| 9 | 12 | `results/n9_N11_SAT.txt` | `cnf/n9_N12.cnf` |
+| 10 | 13 | `results/n10_N12_SAT.txt` | `cnf/n10_N13.cnf` |
+| 11 | 14 | `results/n11_N13_SAT.txt` | `cnf/n11_N14.cnf` |
+| 12 | 15 | `results/n12_N14_SAT.txt` | `cnf/n12_N15.cnf` |
+| 13 | 17 | `results/n13_N16_SAT.txt` | `cnf/n13_N17.cnf` |
+| 14 | 18 | `results/n14_N17_SAT.txt` | `cnf/n14_N18.cnf` |
+| 15 | 19 | `results/n15_N18_SAT.txt` | `cnf/n15_N19.cnf` |
+| 16 | 20 | `results/n16_N19_SAT.txt` | `cnf/n16_N20.cnf` |
+| 17 | 21 | `results/n17_N20_SAT.txt` | `cnf/n17_N21.cnf` |
+| 18 | 22 | `results/n18_N21_SAT.txt` | `cnf/n18_N22.cnf` |
+| 19 | 23 | `results/n19_N22_SAT.txt` | `cnf/n19_N23.cnf` |
+| 20 | 24 | `results/n20_N23_SAT.txt` | `cnf/n20_N24.cnf` |
+
+The corresponding DRAT certificate for each upper instance is stored in `proofs/` with suffix `_ascii.drat`.
+
+---
+
+## 10. Logs and running times
+
+The repository keeps both solver and checker transcripts.
+
+- CaDiCaL logs: `logs/*_cadical.log`
+- DRAT-trim logs: `logs/*_drat_trim.log`
+- UNSAT batch summary: `logs/verification_summary.csv`
+- SAT witness batch summary: `results/witness_verification.txt`
+- Original Z3 computation outputs: `results/*_SAT.txt` and `results/*_UNSAT.txt`
+
+The individual files record the corresponding running times and computation details.
+
+---
+
+## 11. Original Z3 search
+
+`ramsey_z3_batch_autosave.py` contains the original Python/Z3 search used to obtain the SAT/UNSAT computational data.
+
+The independent verification scripts are intentionally separate from the search procedure:
+
+```text
+Z3 search
+    ↓
+SAT witness
+    ↓
+verify_witness.py
+```
+
+and
+
+```text
+CNF generator
+    ↓
+CaDiCaL
+    ↓
+DRAT
+    ↓
+DRAT-trim
+```
+
+This separation reduces reliance on a single implementation.
+
+---
+
+## 12. Reproducibility principle
+
+For a claimed exact value \(R\):
 
 \[
-R_<\bigl(\mathcal S_{1,3},(\mathcal P_{16},\triangleleft_{\mathrm{alt}})\bigr)\ge 20.
+\boxed{\text{verified SAT witness on }K_{R-1}}
 \]
 
-The result files also contain solver/environment information and running times.
+proves
 
-## 7. UNSAT certificates
+\[
+R_<\ge R,
+\]
 
-The upper-bound CNF instances are stored in `cnf/`.
+while
 
-For each instance, CaDiCaL is run with textual proof output, using the `--no-binary` option. A typical command is
+\[
+\boxed{\text{verified UNSAT certificate on }K_R}
+\]
 
-```bash
-cadical --no-binary INPUT.cnf PROOF.drat
-```
+proves
 
-CaDiCaL uses exit code `20` for an UNSAT instance.
+\[
+R_<\le R.
+\]
 
-The resulting DRAT proof is then checked independently with DRAT-trim:
+Together they certify the reported exact value.
 
-```bash
-./drat-trim INPUT.cnf PROOF.drat
-```
-
-A successfully checked proof contains
-
-```text
-s VERIFIED
-```
-
-All 18 upper-bound instances in the current computation passed this independent verification.
-
-## 8. Solver and checker
-
-The final UNSAT certification used:
-
-- **CaDiCaL 2.0.1** as the proof-producing SAT solver;
-- **DRAT-trim** as the independent proof checker;
-- textual DRAT proofs generated with `--no-binary`.
-
-CaDiCaL and DRAT-trim were compiled locally under **MSYS2 UCRT64 on Windows**.
-
-For archival reproducibility, the final repository/release should additionally record the exact DRAT-trim commit, Python version, Z3 version, Windows version, CPU, RAM, and command-line options used.
-
-## 9. Computational logs and summary files
-
-`results/computational_results.csv` summarizes the Z3 computations.
-
-`logs/verification_summary.csv` summarizes the certificate verification. In the current run, all 18 upper-bound instances have status `VERIFIED`.
-
-The `logs/` directory also contains per-instance CaDiCaL and DRAT-trim transcripts, so each upper-bound computation can be audited individually.
-
-## 10. Reproducing the upper-bound certification
-
-A typical full reproduction is:
+For the current range \(3\le n\le 20\):
 
 ```text
-1. Run generate_cnf.py
-2. Compile/install CaDiCaL and DRAT-trim
-3. Run verify_all_unsat.sh from MSYS2 UCRT64
-4. Check logs/verification_summary.csv
-```
+SAT witnesses:
+VERIFIED = 18
+FAILED   = 0
 
-The expected final summary is
-
-```text
+UNSAT certificates:
 VERIFIED = 18
 FAILED   = 0
 ```
 
-## 11. Notes for the paper and archive
-
-The paper should record at least:
-
-- the Boolean/CNF encoding;
-- source code and input generator;
-- solver name and version;
-- checker name and version/commit;
-- operating system and hardware;
-- command-line options;
-- running times;
-- satisfying colorings for lower bounds;
-- DRAT certificates and independent checker results for computational upper bounds;
-- a table distinguishing analytically proved values from computationally certified values.
-
-For a permanent archival release, it is also recommended to include SHA-256 checksums for the CNF, proof, log, and result files.
+Thus both computational sides of all 18 reported exact values are independently checkable from the material in this repository.
