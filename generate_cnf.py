@@ -155,7 +155,7 @@ def save_cnf(n, N):
     将一个实例保存为标准 DIMACS CNF 文件。
     """
 
-    base_dir = Path(r"E:\OrderedRamseyZ3")
+    base_dir = Path(__file__).resolve().parent
 
     cnf_dir = base_dir / "cnf"
 
@@ -310,7 +310,7 @@ def generate_all_unsat_instances():
         f"{len(results)} 个 UNSAT CNF 实例。"
     )
     print(
-        r"保存目录：E:\OrderedRamseyZ3\cnf"
+        f"保存目录：{Path(__file__).resolve().parent / 'cnf'}"
     )
     print("=" * 72)
 
