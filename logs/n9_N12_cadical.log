@@ -11,13 +11,13 @@ c Sat Aug 29 18:00:44 CST 2026 MINGW64_NT-10.0-26200 LAPTOP-TRJ5SOMK 3.6.10-8fbd
 c 
 c --- [ proof tracing ] ------------------------------------------------------
 c 
-c opening file to write 'E:/OrderedRamseyZ3/proofs/n9_N12_ascii.drat'
-c writing non-binary proof trace to 'E:/OrderedRamseyZ3/proofs/n9_N12_ascii.drat'
+c opening file to write 'E:/OrderedRamseyZ3_upload/proofs/n9_N12_ascii.drat'
+c writing non-binary proof trace to 'E:/OrderedRamseyZ3_upload/proofs/n9_N12_ascii.drat'
 c 
 c --- [ parsing input ] ------------------------------------------------------
 c 
-c reading DIMACS file from 'E:/OrderedRamseyZ3/cnf/n9_N12.cnf'
-c opening file to read 'E:/OrderedRamseyZ3/cnf/n9_N12.cnf'
+c reading DIMACS file from 'E:/OrderedRamseyZ3_upload/cnf/n9_N12.cnf'
+c opening file to read 'E:/OrderedRamseyZ3_upload/cnf/n9_N12.cnf'
 c found 'p cnf 66 440' header
 c parsed 440 clauses in 0.00 seconds process time
 c 
@@ -49,7 +49,7 @@ c 0  0.00  6 16 1   0  1  576  282 1.5 7 4 2 6 85%  440  27 41%
 c 
 c --- [ closing proof ] ------------------------------------------------------
 c 
-c DRAT proof file 'E:/OrderedRamseyZ3/proofs/n9_N12_ascii.drat' closed
+c DRAT proof file 'E:/OrderedRamseyZ3_upload/proofs/n9_N12_ascii.drat' closed
 c DRAT 598 added clauses 68.34%
 c DRAT 277 deleted clauses 31.66%
 c DRAT 23733 bytes (0.02 MB)
@@ -108,7 +108,7 @@ c --- [ resources ] ----------------------------------------------------------
 c 
 c total process time since initialization:         0.00    seconds
 c total real time since initialization:            0.01    seconds
-c maximum resident set size of process:            5.96    MB
+c maximum resident set size of process:            5.87    MB
 c 
 c --- [ shutting down ] ------------------------------------------------------
 c 

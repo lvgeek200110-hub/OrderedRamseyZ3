@@ -1,13 +1,35 @@
 #!/usr/bin/env bash
 
-BASE="/e/OrderedRamseyZ3"
+# Directory containing this script.
+# This makes the script independent of the user's local path.
+BASE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-CADICAL="$BASE/cadical-master/build/cadical"
-DRATTRIM="$BASE/drat-trim-master/drat-trim"
+# External SAT solver and proof checker.
+# By default they are searched for in PATH.
+# Custom executable paths can be supplied through environment variables.
+CADICAL="${CADICAL:-cadical}"
+DRATTRIM="${DRATTRIM:-drat-trim}"
 
 CNF_DIR="$BASE/cnf"
 PROOF_DIR="$BASE/proofs"
 LOG_DIR="$BASE/logs"
+
+# Check that the required external tools are available.
+if ! command -v "$CADICAL" >/dev/null 2>&1; then
+    echo "ERROR: CaDiCaL was not found."
+    echo "Install CaDiCaL or set the CADICAL environment variable."
+    echo "Example:"
+    echo "  CADICAL=/path/to/cadical DRATTRIM=/path/to/drat-trim bash verify_all_unsat.sh"
+    exit 1
+fi
+
+if ! command -v "$DRATTRIM" >/dev/null 2>&1; then
+    echo "ERROR: DRAT-trim was not found."
+    echo "Install DRAT-trim or set the DRATTRIM environment variable."
+    echo "Example:"
+    echo "  CADICAL=/path/to/cadical DRATTRIM=/path/to/drat-trim bash verify_all_unsat.sh"
+    exit 1
+fi
 
 mkdir -p "$PROOF_DIR"
 mkdir -p "$LOG_DIR"
