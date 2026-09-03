@@ -181,10 +181,7 @@ $$
 For every increasing \(n\)-set, the CNF therefore contains the clause
 
 $$
-\bigvee_{\substack{
-1\le a<b\le n\\
-a+b\in\{n+1,n+2\}
-}}
+\bigvee_{\substack{1\le a<b\le n\\ a+b\in\{n+1,n+2\}}}
 \neg x_{v_a,v_b}.
 $$
 
