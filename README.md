@@ -161,7 +161,7 @@ $$
 $$
 
 ### 3.2 Excluding a blue alternating
-\((\mathcal P_n,\triangleleft_{\mathrm{alt}})\)
+$(\mathcal P_n,\triangleleft_{\mathrm{alt}})$
 
 Let
 
@@ -169,71 +169,51 @@ $$
 v_1<v_2<\cdots<v_n
 $$
 
-be any increasing \(n\)-vertex subset of \(K_N\).
+be any increasing $n$-vertex subset of $K_N$.
 
 The edges of the alternating ordered path are precisely the pairs of
-positions \(a<b\) satisfying
+positions $a<b$ satisfying
 
 $$
-a+b\in\left\{n+1,n+2\right\}.
+a+b\in\lbrace n+1,n+2\rbrace.
 $$
 
 For convenience, define
 
 $$
 I_n=
-\left\{
-(a,b):
-1\le a<b\le n,\ 
-a+b\in\left\{n+1,n+2\right\}
-\right\}.
+\lbrace
+(a,b)\mid 1\le a<b\le n,\ 
+a+b\in\lbrace n+1,n+2\rbrace
+\rbrace.
 $$
 
 Thus the edge set of the alternating path on the vertices
-\(v_1,\ldots,v_n\) is
+$v_1,\ldots,v_n$ is
 
 $$
-\left\{
-v_av_b:(a,b)\in I_n
-\right\}.
+\lbrace v_av_b:(a,b)\in I_n\rbrace.
 $$
 
-For every increasing \(n\)-set, the CNF therefore contains the clause
+For every increasing $n$-set, the CNF therefore contains the clause
 
 $$
-\bigvee_{(a,b)\in I_n}
-\neg x_{v_a,v_b}.
+\bigvee_{(a,b)\in I_n}\neg x_{v_a,v_b}.
 $$
 
 This clause requires at least one required alternating-path edge to be
-red. Hence the \(n\)-set cannot induce an entirely blue copy of
+red. Hence the $n$-set cannot induce an entirely blue copy of
 
 $$
 (\mathcal P_n,\triangleleft_{\mathrm{alt}}).
 $$
 
-There is one such clause for every increasing \(n\)-vertex subset, so
+There is one such clause for every increasing $n$-vertex subset, so
 the number of alternating-path clauses is
 
 $$
 \binom{N}{n}.
 $$
-
-Consequently, the complete CNF has
-
-$$
-\binom{N}{2}
-$$
-
-Boolean variables and
-
-$$
-\binom{N}{3}+\binom{N}{n}
-$$
-
-clauses.
-
----
 
 ## 4. Repository structure
 
