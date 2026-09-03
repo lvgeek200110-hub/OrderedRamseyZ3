@@ -255,9 +255,7 @@ OrderedRamseyZ3/
     ├── *_SAT.txt
     ├── *_UNSAT.txt
     ├── computational_results.csv
-    ├── witness_verification.txt
-    ├── search_trace.csv
-    └── search_ramsey_values.csv
+    └── witness_verification.txt
 ```
 
 The two Z3 scripts have different purposes:
@@ -360,19 +358,6 @@ The search is carried out for
 $$
 3\le n\le20.
 $$
-
-The detailed search trace is saved to
-
-```text
-results/search_trace.csv
-```
-
-and the values found by the automatic search are saved to
-
-```text
-results/search_ramsey_values.csv
-```
-
 ---
 
 ## 7. Boundary Z3 computations and witness generation
@@ -813,11 +798,6 @@ results/computational_results.csv
 ```
 
 ### Automatic-search outputs
-
-```text
-results/search_trace.csv
-results/search_ramsey_values.csv
-```
 
 The individual Z3 result files record the corresponding running times,
 numbers of lazy-constraint rounds, and numbers of added alternating-path
