@@ -19,7 +19,7 @@ c
 c reading DIMACS file from 'E:/OrderedRamseyZ3_upload/cnf/n10_N13.cnf'
 c opening file to read 'E:/OrderedRamseyZ3_upload/cnf/n10_N13.cnf'
 c found 'p cnf 78 572' header
-c parsed 572 clauses in 0.00 seconds process time
+c parsed 572 clauses in 0.02 seconds process time
 c 
 c --- [ options ] ------------------------------------------------------------
 c 
@@ -33,9 +33,9 @@ c  seconds  reduction conflicts       size tier2     variables
 c         MB    restarts   redundant    glue  trail      remaining
 c          level     rate       size/glu tier1 irredundant
 c 
-c *  0.00  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  572  77 99%
-c )  0.00  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  572  77 99%
-c {  0.00  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  572  77 99%
+c *  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  572  77 99%
+c )  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  572  77 99%
+c {  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  572  77 99%
 c -  0.02  6 24 1   0  1  301  141 1.4 9 6 2 6 85%  572  77 99%
 c i  0.02  6 22 1   0  1  669  347 1.6 8 5 2 6 84%  572  71 91%
 c -  0.02  6 22 2   0  1  734  272 1.6 8 5 2 6 83%  507  71 91%
@@ -60,12 +60,11 @@ c
 c process time taken by individual solving procedures
 c (percentage relative to process time for solving)
 c 
-c         0.02  100.00% search
-c         0.02  100.00% unstable
+c         0.02    0.00% parse
+c         0.00    0.00% search
 c         0.00    0.00% simplify
-c         0.00    0.00% parse
 c   =================================
-c         0.02  100.00% solve
+c         0.00    0.00% solve
 c 
 c last line shows process time for solving
 c (percentage relative to total process time)
@@ -73,8 +72,8 @@ c
 c --- [ statistics ] ---------------------------------------------------------
 c 
 c chronological:                87        11.51 %  of conflicts
-c conflicts:                   756     48384.00    per second
-c decisions:                   779     49856.00    per second
+c conflicts:                   756         0.00    per second
+c decisions:                   779         0.00    per second
 c fixed:                        45        57.69 %  of all variables
 c learned:                     676        89.42 %  per conflict
 c learned_lits:               7534       100.00 %  learned literals
@@ -82,7 +81,7 @@ c minimized:                     0         0.00 %  learned literals
 c shrunken:                   1812        24.05 %  learned literals
 c minishrunken:                354         4.70 %  learned literals
 c otfs:                         73         9.66 %  of conflict
-c propagations:              12290         0.79 M  per second
+c propagations:              12290         0.00 M  per second
 c reduced:                      27         3.57 %  per conflict
 c subsumed:                    255        20.50 %  of all clauses
 c strengthened:                 71         5.71 %  of all clauses
@@ -107,7 +106,7 @@ c --- [ resources ] ----------------------------------------------------------
 c 
 c total process time since initialization:         0.02    seconds
 c total real time since initialization:            0.01    seconds
-c maximum resident set size of process:            5.96    MB
+c maximum resident set size of process:            6.02    MB
 c 
 c --- [ shutting down ] ------------------------------------------------------
 c 

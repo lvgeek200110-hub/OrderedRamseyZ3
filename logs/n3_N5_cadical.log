@@ -33,9 +33,9 @@ c  seconds  reduction conflicts       size tier2     variables
 c         MB    restarts   redundant    glue  trail      remaining
 c          level     rate       size/glu tier1 irredundant
 c 
-c *  0.00  5  0 0   0  0    0    0 0.0 0 0 2 6  0%   20  10 100%
-c l  0.00  6  0 0   0  0    0    0 0.0 1 0 2 6 100%   20   0  0%
-c 0  0.00  6  0 0   0  0    0    0 0.0 1 0 2 6 100%   20   0  0%
+c *  0.02  5  0 0   0  0    0    0 0.0 0 0 2 6  0%   20  10 100%
+c l  0.02  6  0 0   0  0    0    0 0.0 1 0 2 6 100%   20   0  0%
+c 0  0.02  6  0 0   0  0    0    0 0.0 1 0 2 6 100%   20   0  0%
 c 
 c --- [ closing proof ] ------------------------------------------------------
 c 
@@ -91,9 +91,9 @@ c
 c 
 c --- [ resources ] ----------------------------------------------------------
 c 
-c total process time since initialization:         0.00    seconds
-c total real time since initialization:            0.00    seconds
-c maximum resident set size of process:            5.60    MB
+c total process time since initialization:         0.02    seconds
+c total real time since initialization:            0.02    seconds
+c maximum resident set size of process:            5.62    MB
 c 
 c --- [ shutting down ] ------------------------------------------------------
 c 

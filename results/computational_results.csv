@@ -1,4 +1,4 @@
-﻿n,exact_value,N,expected,result,rounds,blocking_constraints,time_seconds,check,source_file
+﻿n,claimed_value,N,expected,result,rounds,blocking_constraints,time_seconds,check,source_file
 3,5,4,SAT,SAT,2,1,0.002209,PASSED,n3_N4_SAT.txt
 3,5,5,UNSAT,UNSAT,4,3,0.002726,PASSED,n3_N5_UNSAT.txt
 4,6,5,SAT,SAT,2,1,0.001487,PASSED,n4_N5_SAT.txt

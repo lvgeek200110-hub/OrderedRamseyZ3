@@ -33,16 +33,16 @@ c  seconds  reduction conflicts       size tier2     variables
 c         MB    restarts   redundant    glue  trail      remaining
 c          level     rate       size/glu tier1 irredundant
 c 
-c *  0.02  5  0 0   0  0    0    0 0.0 0 0 2 6  0%  240  44 98%
-c )  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  240  44 98%
-c {  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  240  44 98%
-c i  0.02  6 10 0   0  1   47   21 1.4 5 4 2 6 82%  240  43 96%
-c i  0.02  6 10 0   0  1   55   24 1.4 5 4 2 6 83%  240  42 93%
-c i  0.02  6  9 0   0  1   86   34 1.4 5 3 2 6 84%  240  34 76%
-c i  0.02  6  9 0   0  1   87   34 1.4 5 3 2 6 83%  240  33 73%
-c i  0.02  6  9 0   0  1   92   36 1.4 5 3 2 6 83%  240  29 64%
-c }  0.02  6  9 0   0  1   95   36 1.4 5 3 2 6 83%  240  11 24%
-c 0  0.02  6  9 0   0  1   95   36 1.4 5 3 2 6 83%  240  11 24%
+c *  0.00  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  240  44 98%
+c )  0.00  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  240  44 98%
+c {  0.00  6  0 0   0  0    0    0 0.0 0 0 2 6  0%  240  44 98%
+c i  0.00  6 10 0   0  1   47   21 1.4 5 4 2 6 82%  240  43 96%
+c i  0.00  6 10 0   0  1   55   24 1.4 5 4 2 6 83%  240  42 93%
+c i  0.00  6  9 0   0  1   86   34 1.4 5 3 2 6 84%  240  34 76%
+c i  0.00  6  9 0   0  1   87   34 1.4 5 3 2 6 83%  240  33 73%
+c i  0.00  6  9 0   0  1   92   36 1.4 5 3 2 6 83%  240  29 64%
+c }  0.00  6  9 0   0  1   95   36 1.4 5 3 2 6 83%  240  11 24%
+c 0  0.00  6  9 0   0  1   95   36 1.4 5 3 2 6 83%  240  11 24%
 c 
 c --- [ closing proof ] ------------------------------------------------------
 c 
@@ -102,9 +102,9 @@ c
 c 
 c --- [ resources ] ----------------------------------------------------------
 c 
-c total process time since initialization:         0.02    seconds
+c total process time since initialization:         0.00    seconds
 c total real time since initialization:            0.00    seconds
-c maximum resident set size of process:            5.75    MB
+c maximum resident set size of process:            5.77    MB
 c 
 c --- [ shutting down ] ------------------------------------------------------
 c 

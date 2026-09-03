@@ -5,4 +5,4 @@
 c 303 of 599 lemmas in core using 3859 resolution steps
 c 0 RAT lemmas in core; 36 redundant literals in core lemmas
 s VERIFIED
-c verification time: 0.080 seconds
+c verification time: 0.078 seconds

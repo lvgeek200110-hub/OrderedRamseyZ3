@@ -107,8 +107,8 @@ c
 c --- [ resources ] ----------------------------------------------------------
 c 
 c total process time since initialization:         0.00    seconds
-c total real time since initialization:            0.01    seconds
-c maximum resident set size of process:            5.87    MB
+c total real time since initialization:            0.00    seconds
+c maximum resident set size of process:            5.91    MB
 c 
 c --- [ shutting down ] ------------------------------------------------------
 c 

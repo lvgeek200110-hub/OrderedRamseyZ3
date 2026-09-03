@@ -19,7 +19,7 @@ c
 c reading DIMACS file from 'E:/OrderedRamseyZ3_upload/cnf/n5_N7.cnf'
 c opening file to read 'E:/OrderedRamseyZ3_upload/cnf/n5_N7.cnf'
 c found 'p cnf 21 56' header
-c parsed 56 clauses in 0.02 seconds process time
+c parsed 56 clauses in 0.00 seconds process time
 c 
 c --- [ options ] ------------------------------------------------------------
 c 
@@ -33,13 +33,13 @@ c  seconds  reduction conflicts       size tier2     variables
 c         MB    restarts   redundant    glue  trail      remaining
 c          level     rate       size/glu tier1 irredundant
 c 
-c *  0.02  5  0 0   0  0    0    0 0.0 0 0 2 6  0%   56  20 95%
-c )  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%   56  20 95%
-c {  0.02  6  0 0   0  0    0    0 0.0 0 0 2 6  0%   56  20 95%
-c i  0.02  6  4 0   0  1    6    3 2.0 2 1 2 6 78%   56  19 90%
-c i  0.02  6  3 0   0  1    7    3 2.3 2 1 2 6 81%   56  18 86%
-c }  0.02  6  3 0   0  1   13    6 2.1 2 1 2 6 84%   56   1  5%
-c 0  0.02  6  3 0   0  1   13    6 2.1 2 1 2 6 84%   56   1  5%
+c *  0.00  5  0 0   0  0    0    0 0.0 0 0 2 6  0%   56  20 95%
+c )  0.00  6  0 0   0  0    0    0 0.0 0 0 2 6  0%   56  20 95%
+c {  0.00  6  0 0   0  0    0    0 0.0 0 0 2 6  0%   56  20 95%
+c i  0.00  6  4 0   0  1    6    3 2.0 2 1 2 6 78%   56  19 90%
+c i  0.00  6  3 0   0  1    7    3 2.3 2 1 2 6 81%   56  18 86%
+c }  0.00  6  3 0   0  1   13    6 2.1 2 1 2 6 84%   56   1  5%
+c 0  0.00  6  3 0   0  1   13    6 2.1 2 1 2 6 84%   56   1  5%
 c 
 c --- [ closing proof ] ------------------------------------------------------
 c 
@@ -57,7 +57,7 @@ c
 c process time taken by individual solving procedures
 c (percentage relative to process time for solving)
 c 
-c         0.02    0.00% parse
+c         0.00    0.00% parse
 c         0.00    0.00% search
 c         0.00    0.00% simplify
 c   =================================
@@ -98,9 +98,9 @@ c
 c 
 c --- [ resources ] ----------------------------------------------------------
 c 
-c total process time since initialization:         0.02    seconds
+c total process time since initialization:         0.00    seconds
 c total real time since initialization:            0.00    seconds
-c maximum resident set size of process:            5.68    MB
+c maximum resident set size of process:            5.71    MB
 c 
 c --- [ shutting down ] ------------------------------------------------------
 c 

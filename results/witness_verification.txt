@@ -1,6 +1,9 @@
 ======================================================================
 Batch verification of SAT witnesses
 ======================================================================
+Expected witness files = 18
+Found witness files    = 18
+
 n10_N12_SAT.txt: VERIFIED
 n11_N13_SAT.txt: VERIFIED
 n12_N14_SAT.txt: VERIFIED
