@@ -35,8 +35,9 @@ Python:
 Z3:
 4.16.0
 
-The exploratory SAT computations and lower-bound witnesses were
-obtained using Python and the z3-solver Python package.
+The exploratory Boolean satisfiability computations and the
+lower-bound coloring witnesses were obtained using Python and
+the z3-solver Python package.
 
 
 4. CaDiCaL
