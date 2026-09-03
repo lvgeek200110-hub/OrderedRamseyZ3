@@ -28,7 +28,7 @@ verification procedures.
   textual DRAT certificates are produced, and the certificates are
   independently checked by DRAT-trim.
 
-For the 18 cases \(3\le n\le20\), the current verification results are
+For the 18 cases \(3\le n\le 20\), the current verification results are
 
 ```text
 SAT witnesses:
@@ -48,7 +48,7 @@ checkable from the material in this repository.
 ## 1. Quick verification
 
 After cloning the repository and installing the required software, the
-main verification steps are:
+main verification steps are as follows.
 
 ### Verify all SAT lower-bound witnesses
 
@@ -166,7 +166,7 @@ $$
 Let
 
 $$
-v_1< v_2<\cdots<v_n
+v_1<v_2<\cdots<v_n
 $$
 
 be any increasing \(n\)-vertex subset of \(K_N\).
@@ -175,19 +175,38 @@ The edges of the alternating ordered path are precisely the pairs of
 positions \(a<b\) satisfying
 
 $$
-a+b\in\{n+1,n+2\}.
+a+b\in\left\{n+1,n+2\right\}.
+$$
+
+For convenience, define
+
+$$
+I_n=
+\left\{
+(a,b):
+1\le a<b\le n,\ 
+a+b\in\left\{n+1,n+2\right\}
+\right\}.
+$$
+
+Thus the edge set of the alternating path on the vertices
+\(v_1,\ldots,v_n\) is
+
+$$
+\left\{
+v_av_b:(a,b)\in I_n
+\right\}.
 $$
 
 For every increasing \(n\)-set, the CNF therefore contains the clause
 
 $$
-\bigvee_{\substack{1\le a<b\le n\\ a+b\in\{n+1,n+2\}}}
+\bigvee_{(a,b)\in I_n}
 \neg x_{v_a,v_b}.
 $$
 
-This clause requires at least one edge of the candidate alternating
-path to be red. Hence the \(n\)-set cannot induce an entirely blue
-copy of
+This clause requires at least one required alternating-path edge to be
+red. Hence the \(n\)-set cannot induce an entirely blue copy of
 
 $$
 (\mathcal P_n,\triangleleft_{\mathrm{alt}}).
@@ -250,7 +269,9 @@ OrderedRamseyZ3/
     ├── *_SAT.txt
     ├── *_UNSAT.txt
     ├── computational_results.csv
-    └── witness_verification.txt
+    ├── witness_verification.txt
+    ├── search_trace.csv
+    └── search_ramsey_values.csv
 ```
 
 The two Z3 scripts have different purposes:
@@ -343,6 +364,7 @@ The claimed Ramsey values are **not hard-coded into this search**.
 
 The program uses a lazy-constraint procedure. Initially, only the
 constraints excluding a red \(\mathcal S_{1,3}\) are given to Z3.
+
 Whenever the current model contains a blue alternating
 \((\mathcal P_n,\triangleleft_{\mathrm{alt}})\), a blocking constraint
 for that copy is added and Z3 is called again.
@@ -353,8 +375,17 @@ $$
 3\le n\le20.
 $$
 
-When executed, the script also records the search trace and the values
-found in the `results/` directory.
+The detailed search trace is saved to
+
+```text
+results/search_trace.csv
+```
+
+and the values found by the automatic search are saved to
+
+```text
+results/search_ramsey_values.csv
+```
 
 ---
 
@@ -389,8 +420,10 @@ N = R   : UNSAT
 ```
 
 For a SAT boundary instance, the program saves an explicit coloring
-witness in `results/`. Only the red edges need to be stored; every
-unlisted edge is interpreted as blue.
+witness in `results/`.
+
+Only the red edges need to be stored; every unlisted edge is interpreted
+as blue.
 
 The result files also record information such as
 
@@ -478,6 +511,7 @@ verified using DRAT-trim.
 ## 9. Verify one SAT lower-bound witness
 
 A SAT result file lists the red edges of an avoiding coloring.
+
 Every edge not listed as red is interpreted as blue.
 
 For example:
@@ -628,8 +662,10 @@ The script terminates successfully only if all 18 expected certificates
 are independently verified.
 
 A solver log that merely states `UNSATISFIABLE` is not treated as the
-upper-bound proof. The independently checked DRAT certificate is the
-checkable UNSAT evidence.
+upper-bound proof.
+
+The independently checked DRAT certificate is the checkable UNSAT
+evidence.
 
 ---
 
@@ -664,7 +700,7 @@ The summary script checks:
 - that the filename agrees with the metadata stored inside the file;
 - that \(N=R-1\) has status SAT;
 - that \(N=R\) has status UNSAT;
-- that the result files can be parsed correctly.
+- that all result files can be parsed correctly.
 
 The output table is written to
 
@@ -790,6 +826,13 @@ results/*_UNSAT.txt
 results/computational_results.csv
 ```
 
+### Automatic-search outputs
+
+```text
+results/search_trace.csv
+results/search_ramsey_values.csv
+```
+
 The individual Z3 result files record the corresponding running times,
 numbers of lazy-constraint rounds, and numbers of added alternating-path
 blocking constraints.
@@ -867,8 +910,7 @@ $$
 Therefore,
 
 $$
-R_<
-\bigl(
+R_<\bigl(
 \mathcal S_{1,3},
 (\mathcal P_n,\triangleleft_{\mathrm{alt}})
 \bigr)
