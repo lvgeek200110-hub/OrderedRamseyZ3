@@ -163,13 +163,7 @@ $$
 ### 3.2 Excluding a blue alternating
 $(\mathcal P_n,\triangleleft_{\mathrm{alt}})$
 
-Let
-
-$$
-v_1<v_2<\cdots<v_n
-$$
-
-be any increasing $n$-vertex subset of $K_N$.
+Let $v_1,\ldots,v_n$ be vertices of $K_N$ listed in increasing order.
 
 The edges of the alternating ordered path are precisely the pairs of
 positions $a<b$ satisfying
