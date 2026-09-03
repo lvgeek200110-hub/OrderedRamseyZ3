@@ -4,12 +4,21 @@ from math import comb
 
 
 # ==========================================================
-# Theorem 3.5 中 n = 3,...,20 的精确值
+# Claimed exact values for n = 3,...,20
 #
-# 对每个 n，N = R_<(...) 是对应的 UNSAT 实例。
+# For each n, the corresponding claimed value R is used
+# to generate the upper-bound CNF instance on K_R.
+#
+# This script only generates the DIMACS CNF instances.
+# It does NOT itself establish that these instances are
+# UNSAT.
+#
+# Their UNSAT status is established separately using
+# CaDiCaL, and the resulting DRAT certificates are
+# independently checked using DRAT-trim.
 # ==========================================================
 
-EXACT_VALUES = {
+CLAIMED_VALUES = {
     3: 5,
     4: 6,
     5: 7,
@@ -31,20 +40,54 @@ EXACT_VALUES = {
 }
 
 
+# ==========================================================
+# Edge variables
+# ==========================================================
+
 def create_edge_variables(N):
     """
-    给 K_N 的每一条边分配一个 DIMACS 正整数变量编号。
+    Assign one positive DIMACS variable number to every
+    edge of the ordered complete graph K_N.
 
-    颜色约定：
-        正变量 = 蓝边
-        负变量 = 红边
+    For each edge ij with 1 <= i < j <= N, a variable x_ij
+    is created.
+
+    Boolean convention
+    ------------------
+    x_ij = True:
+        edge ij is blue.
+
+    x_ij = False:
+        edge ij is red.
+
+    Therefore, in DIMACS notation:
+
+        positive literal  x_ij
+            means that edge ij is blue;
+
+        negative literal -x_ij
+            means that edge ij is red.
+
+    Returns
+    -------
+    dict
+        A dictionary mapping each edge (i,j) to its DIMACS
+        variable number.
     """
+
+    if N < 2:
+        raise ValueError("N must be at least 2.")
+
     edge_to_var = {}
+
     var_id = 1
 
     for i in range(1, N + 1):
+
         for j in range(i + 1, N + 1):
+
             edge_to_var[(i, j)] = var_id
+
             var_id += 1
 
     return edge_to_var
@@ -52,78 +95,156 @@ def create_edge_variables(N):
 
 def get_var(edge_to_var, i, j):
     """
-    返回边 ij 对应的 DIMACS 变量编号。
+    Return the DIMACS variable number corresponding to edge
+    ij.
+
+    Since graph edges are undirected, the order of i and j
+    is normalized automatically.
     """
+
+    if i == j:
+        raise ValueError("A loop edge (i,i) does not exist.")
+
     if i > j:
         i, j = j, i
 
     return edge_to_var[(i, j)]
 
 
+# ==========================================================
+# Generate one complete CNF instance
+# ==========================================================
+
 def generate_cnf(n, N):
     """
-    生成如下问题的完整 CNF：
+    Generate the complete CNF encoding for the following
+    decision problem:
 
-        K_N 是否存在红蓝染色，同时满足：
-        1. 不含红色 S_{1,3}；
-        2. 不含蓝色 (P_n, alt)。
+        Does K_N admit a red/blue edge coloring containing
+        neither
 
-    True  = 蓝边
-    False = 红边
+            a red S_{1,3}
+
+        nor
+
+            a blue (P_n, triangleleft_alt)?
+
+    Boolean convention
+    ------------------
+    True  = blue edge
+    False = red edge
+
+    The CNF consists of two families of clauses:
+
+    1. clauses excluding a red S_{1,3};
+
+    2. clauses excluding a blue alternating P_n.
+
+    Returns
+    -------
+    edge_to_var:
+        dictionary assigning DIMACS variable numbers to
+        edges;
+
+    clauses:
+        list of CNF clauses.
     """
 
+    if n < 2:
+        raise ValueError("n must be at least 2.")
+
     if N < n:
-        raise ValueError("必须满足 N >= n。")
+        raise ValueError("N must satisfy N >= n.")
+
+    # ------------------------------------------------------
+    # Create the Boolean edge variables.
+    # ------------------------------------------------------
 
     edge_to_var = create_edge_variables(N)
 
     clauses = []
 
     # ======================================================
-    # 1. 禁止红色 S_{1,3}
+    # 1. Exclude a red S_{1,3}
     #
-    # 对每个 i < j < k 加入
+    # For every i < j < k, add
     #
-    #     x_ij OR x_ik
+    #     x_ij OR x_ik.
     #
-    # 因为 False 表示红边，
-    # 所以 ij 和 ik 不能同时为红边。
+    # Since False means red, this clause prevents both
+    # edges ij and ik from being red simultaneously.
+    #
+    # Hence every vertex has at most one red edge to its
+    # right, so no red S_{1,3} occurs.
     # ======================================================
 
     for i in range(1, N + 1):
 
-        right_vertices = range(i + 1, N + 1)
+        right_vertices = range(
+            i + 1,
+            N + 1,
+        )
 
-        for j, k in combinations(right_vertices, 2):
+        for j, k in combinations(
+            right_vertices,
+            2,
+        ):
 
-            clauses.append([
-                get_var(edge_to_var, i, j),
-                get_var(edge_to_var, i, k)
-            ])
+            clauses.append(
+                [
+                    get_var(
+                        edge_to_var,
+                        i,
+                        j,
+                    ),
+                    get_var(
+                        edge_to_var,
+                        i,
+                        k,
+                    ),
+                ]
+            )
 
     # ======================================================
-    # 2. 禁止蓝色 (P_n, alt)
+    # 2. Exclude a blue alternating P_n
     #
-    # 对每一个递增 n-顶点子集
+    # For every increasing n-subset
     #
-    #     w_1 < ... < w_n
+    #     w_1 < w_2 < ... < w_n,
     #
-    # 交替路径的边满足
+    # the edges of the alternating ordered path are exactly
+    # the pairs of positions a < b satisfying
     #
     #     a + b in {n+1, n+2}.
     #
-    # 为避免所有这些边同时为蓝色，
-    # 加入它们的负文字析取。
+    # To prevent all these n-1 edges from being blue
+    # simultaneously, add the clause
+    #
+    #     OR(-x_{w_a,w_b}),
+    #
+    # over all required alternating-path edges.
+    #
+    # Thus at least one required edge must be red.
     # ======================================================
 
-    for vertices in combinations(range(1, N + 1), n):
+    for vertices in combinations(
+        range(1, N + 1),
+        n,
+    ):
 
         clause = []
 
         for a in range(1, n + 1):
-            for b in range(a + 1, n + 1):
 
-                if a + b in {n + 1, n + 2}:
+            for b in range(
+                a + 1,
+                n + 1,
+            ):
+
+                if (
+                    a + b
+                    in {n + 1, n + 2}
+                ):
 
                     u = vertices[a - 1]
                     v = vertices[b - 1]
@@ -131,18 +252,28 @@ def generate_cnf(n, N):
                     var_id = get_var(
                         edge_to_var,
                         u,
-                        v
+                        v,
                     )
 
-                    clause.append(-var_id)
+                    # Negative literal:
+                    # this required path edge is red.
+                    clause.append(
+                        -var_id
+                    )
 
-        # P_n 必须恰好有 n-1 条边
+        # --------------------------------------------------
+        # Sanity check:
+        #
+        # P_n must have exactly n-1 edges.
+        # --------------------------------------------------
+
         if len(clause) != n - 1:
+
             raise RuntimeError(
                 f"n={n}, N={N}: "
-                f"交替路径边数错误，"
-                f"得到 {len(clause)} 条，"
-                f"应该为 {n - 1} 条。"
+                "incorrect number of alternating-path "
+                f"edges: obtained {len(clause)}, "
+                f"expected {n - 1}."
             )
 
         clauses.append(clause)
@@ -150,63 +281,151 @@ def generate_cnf(n, N):
     return edge_to_var, clauses
 
 
+# ==========================================================
+# Save one DIMACS CNF instance
+# ==========================================================
+
 def save_cnf(n, N):
     """
-    将一个实例保存为标准 DIMACS CNF 文件。
+    Generate one CNF instance and save it in standard
+    DIMACS format in the cnf/ directory.
+
+    File naming convention
+    ----------------------
+    n{n}_N{N}.cnf
+
+    Example
+    -------
+    n16_N20.cnf
     """
 
-    base_dir = Path(__file__).resolve().parent
+    base_dir = (
+        Path(__file__)
+        .resolve()
+        .parent
+    )
 
-    cnf_dir = base_dir / "cnf"
+    cnf_dir = (
+        base_dir
+        / "cnf"
+    )
 
     cnf_dir.mkdir(
         parents=True,
-        exist_ok=True
+        exist_ok=True,
     )
 
-    # 统一使用下划线！
-    output_file = cnf_dir / f"n{n}_N{N}.cnf"
+    output_file = (
+        cnf_dir
+        / f"n{n}_N{N}.cnf"
+    )
 
     edge_to_var, clauses = generate_cnf(
         n=n,
-        N=N
+        N=N,
     )
 
-    number_of_variables = len(edge_to_var)
-    number_of_clauses = len(clauses)
+    # ------------------------------------------------------
+    # Number of Boolean variables.
+    # ------------------------------------------------------
 
-    red_star_clauses = comb(N, 3)
-    alternating_path_clauses = comb(N, n)
+    number_of_variables = len(
+        edge_to_var
+    )
+
+    expected_variables = comb(
+        N,
+        2,
+    )
+
+    if (
+        number_of_variables
+        != expected_variables
+    ):
+
+        raise RuntimeError(
+            f"n={n}, N={N}: "
+            "variable count mismatch: "
+            f"obtained {number_of_variables}, "
+            f"expected {expected_variables}."
+        )
+
+    # ------------------------------------------------------
+    # Number of clauses.
+    #
+    # Red-star clauses:
+    #
+    #     C(N,3)
+    #
+    # Alternating-path clauses:
+    #
+    #     C(N,n)
+    #
+    # Therefore:
+    #
+    #     total = C(N,3) + C(N,n).
+    # ------------------------------------------------------
+
+    red_star_clauses = comb(
+        N,
+        3,
+    )
+
+    alternating_path_clauses = comb(
+        N,
+        n,
+    )
 
     expected_total = (
         red_star_clauses
         + alternating_path_clauses
     )
 
-    # 再检查一次子句总数
-    if number_of_clauses != expected_total:
+    number_of_clauses = len(
+        clauses
+    )
+
+    if (
+        number_of_clauses
+        != expected_total
+    ):
+
         raise RuntimeError(
             f"n={n}, N={N}: "
-            f"子句数不一致。"
-            f"实际 {number_of_clauses}，"
-            f"理论 {expected_total}。"
+            "clause count mismatch: "
+            f"obtained {number_of_clauses}, "
+            f"expected {expected_total}."
         )
 
     # ======================================================
-    # 写 DIMACS CNF
+    # Write DIMACS CNF
     # ======================================================
 
     with output_file.open(
         "w",
-        encoding="ascii"
+        encoding="ascii",
+        newline="\n",
     ) as file:
+
+        # --------------------------------------------------
+        # Comments
+        # --------------------------------------------------
 
         file.write(
             "c Ordered Ramsey CNF instance\n"
         )
 
         file.write(
-            f"c n = {n}, N = {N}\n"
+            "c Problem: "
+            "S_{1,3} versus alternating P_n\n"
+        )
+
+        file.write(
+            f"c n = {n}\n"
+        )
+
+        file.write(
+            f"c N = {N}\n"
         )
 
         file.write(
@@ -218,10 +437,28 @@ def save_cnf(n, N):
         )
 
         file.write(
+            "c Red-star clauses = "
+            f"{red_star_clauses}\n"
+        )
+
+        file.write(
+            "c Alternating-path clauses = "
+            f"{alternating_path_clauses}\n"
+        )
+
+        # --------------------------------------------------
+        # DIMACS header
+        # --------------------------------------------------
+
+        file.write(
             f"p cnf "
             f"{number_of_variables} "
             f"{number_of_clauses}\n"
         )
+
+        # --------------------------------------------------
+        # Clauses
+        # --------------------------------------------------
 
         for clause in clauses:
 
@@ -232,93 +469,155 @@ def save_cnf(n, N):
                 )
             )
 
-            file.write(" 0\n")
+            file.write(
+                " 0\n"
+            )
 
     return {
         "n": n,
         "N": N,
         "variables": number_of_variables,
-        "red_star_clauses": red_star_clauses,
+        "red_star_clauses":
+            red_star_clauses,
         "alternating_path_clauses":
             alternating_path_clauses,
-        "total_clauses": number_of_clauses,
-        "file": output_file
+        "total_clauses":
+            number_of_clauses,
+        "file":
+            output_file,
     }
 
 
-def generate_all_unsat_instances():
+# ==========================================================
+# Generate all upper-bound CNF instances
+# ==========================================================
+
+def generate_all_upper_bound_instances():
     """
-    批量生成 Theorem 3.5 中 n=3,...,20
-    所对应的 18 个 UNSAT 实例。
+    Generate the 18 upper-bound CNF instances corresponding
+    to the claimed values for
+
+        n = 3,4,...,20.
+
+    For each n, the CNF is generated on
+
+        N = CLAIMED_VALUES[n].
+
+    This script does not assert that these instances are
+    UNSAT.
+
+    Their UNSAT status is established separately by
+    CaDiCaL, and the resulting DRAT certificates are checked
+    independently using DRAT-trim.
     """
 
-    print("=" * 72)
-    print("Generating all UNSAT CNF instances")
-    print("=" * 72)
+    print(
+        "=" * 72
+    )
+
+    print(
+        "Generating all upper-bound CNF instances"
+    )
+
+    print(
+        "=" * 72
+    )
 
     results = []
 
-    total_instances = len(EXACT_VALUES)
+    total_instances = len(
+        CLAIMED_VALUES
+    )
 
     for index, (n, N) in enumerate(
-        EXACT_VALUES.items(),
-        start=1
+        CLAIMED_VALUES.items(),
+        start=1,
     ):
 
         print()
+
         print(
             f"[{index}/{total_instances}] "
-            f"Generating n = {n}, N = {N}"
+            f"Generating n={n}, N={N}"
         )
 
         result = save_cnf(
             n=n,
-            N=N
+            N=N,
         )
 
-        results.append(result)
+        results.append(
+            result
+        )
 
         print(
-            f"Variables = "
+            "Variables = "
             f"{result['variables']}"
         )
 
         print(
-            f"Red-star clauses = "
+            "Red-star clauses = "
             f"{result['red_star_clauses']}"
         )
 
         print(
-            f"Alternating-path clauses = "
+            "Alternating-path clauses = "
             f"{result['alternating_path_clauses']}"
         )
 
         print(
-            f"Total clauses = "
+            "Total clauses = "
             f"{result['total_clauses']}"
         )
 
         print(
-            f"Saved: "
+            "Saved: "
             f"{result['file'].name}"
         )
 
+    # ======================================================
+    # Final summary
+    # ======================================================
+
     print()
-    print("=" * 72)
+
     print(
-        f"全部完成：共生成 "
-        f"{len(results)} 个 UNSAT CNF 实例。"
+        "=" * 72
     )
+
     print(
-        f"保存目录：{Path(__file__).resolve().parent / 'cnf'}"
+        "Generation finished."
     )
-    print("=" * 72)
+
+    print(
+        "Number of generated upper-bound "
+        f"CNF instances = {len(results)}"
+    )
+
+    output_directory = (
+        Path(__file__)
+        .resolve()
+        .parent
+        / "cnf"
+    )
+
+    print(
+        "Output directory:"
+    )
+
+    print(
+        output_directory
+    )
+
+    print(
+        "=" * 72
+    )
 
 
 # ==========================================================
-# 主程序
+# Main program
 # ==========================================================
 
 if __name__ == "__main__":
 
-    generate_all_unsat_instances()
+    generate_all_upper_bound_instances()
