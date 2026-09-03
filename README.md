@@ -5,7 +5,7 @@ and independently verify exact small values for the ordered Ramsey
 problem
 
 $$
-R_<\bigl(
+R_{<}\bigl(
 \mathcal S_{1,3},
 (\mathcal P_n,\triangleleft_{\mathrm{alt}})
 \bigr).
@@ -21,14 +21,14 @@ The repository separates the search procedure from the independent
 verification procedures.
 
 - **Automatic search:** a Python/Z3 program searches for the first value
-  of \(N\) for which no avoiding coloring exists.
+  of $N$ for which no avoiding coloring exists.
 - **Lower bounds:** explicit SAT coloring witnesses are independently
   checked without using Z3.
 - **Upper bounds:** complete DIMACS CNF instances are solved by CaDiCaL,
   textual DRAT certificates are produced, and the certificates are
   independently checked by DRAT-trim.
 
-For the 18 cases \(3\le n\le 20\), the current verification results are
+For the 18 cases $3\le n\le 20$, the current verification results are
 
 ```text
 SAT witnesses:
@@ -107,33 +107,33 @@ results/computational_results.csv
 
 ## 2. Boolean convention
 
-For every edge \(1\le i<j\le N\), one Boolean variable
-\(x_{i,j}\) is used.
+For every edge $1\le i<j\le N$, one Boolean variable
+$x_{i,j}$ is used.
 
-- `True` means that edge \(ij\) is **blue**.
-- `False` means that edge \(ij\) is **red**.
+- `True` means that edge $ij$ is **blue**.
+- `False` means that edge $ij$ is **red**.
 
 The same convention is used by the Python/Z3 programs and by the
 DIMACS CNF generator.
 
 In DIMACS notation:
 
-- a positive literal \(x_{i,j}\) represents that edge \(ij\) is blue;
-- a negative literal \(-x_{i,j}\) represents that edge \(ij\) is red.
+- a positive literal $x_{i,j}$ represents that edge $ij$ is blue;
+- a negative literal $-x_{i,j}$ represents that edge $ij$ is red.
 
 ---
 
 ## 3. CNF encoding
 
-For fixed positive integers \(n\) and \(N\), the CNF is satisfiable if
+For fixed positive integers $n$ and $N$, the CNF is satisfiable if
 and only if there exists a red-blue edge-coloring of the ordered
-complete graph \(K_N\) containing neither
+complete graph $K_N$ containing neither
 
-- a red copy of \(\mathcal S_{1,3}\), nor
+- a red copy of $\mathcal S_{1,3}$, nor
 - a blue copy of
-  \((\mathcal P_n,\triangleleft_{\mathrm{alt}})\).
+  $(\mathcal P_n,\triangleleft_{\mathrm{alt}})$.
 
-### 3.1 Excluding a red \(\mathcal S_{1,3}\)
+### 3.1 Excluding a red $\mathcal S_{1,3}$
 
 For every
 
@@ -148,11 +148,11 @@ x_{i,j}\lor x_{i,k}.
 $$
 
 Since `False` represents a red edge, this clause prevents both
-\(ij\) and \(ik\) from being red simultaneously.
+$ij$ and $ik$ from being red simultaneously.
 
 Equivalently, every vertex has at most one red edge to its right.
 Therefore the coloring contains no red ordered
-\(\mathcal S_{1,3}\).
+$\mathcal S_{1,3}$.
 
 The number of such clauses is
 
@@ -175,27 +175,18 @@ The edges of the alternating ordered path are precisely the pairs of
 positions $a<b$ satisfying
 
 $$
-a+b\in\lbrace n+1,n+2\rbrace.
+a+b=n+1
+\quad\text{or}\quad
+a+b=n+2.
 $$
 
-For convenience, define
+Let $I_n$ denote the set of all pairs $(a,b)$ with
+$1\le a<b\le n$ satisfying the condition above.
 
-$$
-I_n=
-\lbrace
-(a,b)\mid 1\le a<b\le n,\ 
-a+b\in\lbrace n+1,n+2\rbrace
-\rbrace.
-$$
+For each $(a,b)\in I_n$, the required alternating-path edge is
+$v_av_b$.
 
-Thus the edge set of the alternating path on the vertices
-$v_1,\ldots,v_n$ is
-
-$$
-\lbrace v_av_b:(a,b)\in I_n\rbrace.
-$$
-
-For every increasing $n$-set, the CNF therefore contains the clause
+Therefore, for every increasing $n$-set, the CNF contains the clause
 
 $$
 \bigvee_{(a,b)\in I_n}\neg x_{v_a,v_b}.
@@ -214,6 +205,22 @@ the number of alternating-path clauses is
 $$
 \binom{N}{n}.
 $$
+
+Consequently, the complete CNF has
+
+$$
+\binom{N}{2}
+$$
+
+Boolean variables and
+
+$$
+\binom{N}{3}+\binom{N}{n}
+$$
+
+clauses.
+
+---
 
 ## 4. Repository structure
 
@@ -257,7 +264,7 @@ OrderedRamseyZ3/
 The two Z3 scripts have different purposes:
 
 - `search_ramsey.py` automatically searches for the first UNSAT value
-  of \(N\);
+  of $N$;
 - `ramsey_z3_batch_autosave.py` verifies the two boundary instances
   associated with each claimed value and saves the corresponding
   computation results and SAT witnesses.
@@ -314,16 +321,16 @@ The script
 search_ramsey.py
 ```
 
-performs an automatic search for the smallest value of \(N\) for which
+performs an automatic search for the smallest value of $N$ for which
 there is no coloring avoiding both forbidden ordered graphs.
 
-For each fixed \(n\), the search starts at
+For each fixed $n$, the search starts at
 
 $$
 N=n
 $$
 
-and increases \(N\) one at a time.
+and increases $N$ one at a time.
 
 The logic is
 
@@ -343,10 +350,10 @@ UNKNOWN
 The claimed Ramsey values are **not hard-coded into this search**.
 
 The program uses a lazy-constraint procedure. Initially, only the
-constraints excluding a red \(\mathcal S_{1,3}\) are given to Z3.
+constraints excluding a red $\mathcal S_{1,3}$ are given to Z3.
 
 Whenever the current model contains a blue alternating
-\((\mathcal P_n,\triangleleft_{\mathrm{alt}})\), a blocking constraint
+$(\mathcal P_n,\triangleleft_{\mathrm{alt}})$, a blocking constraint
 for that copy is added and Z3 is called again.
 
 The search is carried out for
@@ -379,7 +386,7 @@ ramsey_z3_batch_autosave.py
 
 has a different role from `search_ramsey.py`.
 
-It takes the claimed value \(R\) for each \(3\le n\le20\) and checks
+It takes the claimed value $R$ for each $3\le n\le20$ and checks
 the two boundary instances
 
 $$
@@ -407,8 +414,8 @@ as blue.
 
 The result files also record information such as
 
-- \(n\);
-- \(N\);
+- $n$;
+- $N$;
 - SAT/UNSAT status;
 - number of lazy-constraint rounds;
 - number of blue-path blocking constraints;
@@ -504,10 +511,10 @@ The independent verifier checks:
 
 1. the witness-file format and the validity of all listed red edges;
 2. that no vertex has two red edges to its right, hence no red
-   \(\mathcal S_{1,3}\) occurs;
-3. every increasing \(n\)-vertex subset of \([N]\), to verify that no
+   $\mathcal S_{1,3}$ occurs;
+3. every increasing $n$-vertex subset of $[N]$, to verify that no
    blue alternating
-   \((\mathcal P_n,\triangleleft_{\mathrm{alt}})\) occurs.
+   $(\mathcal P_n,\triangleleft_{\mathrm{alt}})$ occurs.
 
 The verifier also rejects malformed input such as
 
@@ -657,14 +664,14 @@ Run
 python summarize_results.py
 ```
 
-For each claimed value \(R\), two Z3 boundary result files are expected:
+For each claimed value $R$, two Z3 boundary result files are expected:
 
 ```text
 N = R-1 : SAT
 N = R   : UNSAT
 ```
 
-Since there are 18 values of \(n\), there should be exactly
+Since there are 18 values of $n$, there should be exactly
 
 $$
 18\times2=36
@@ -674,12 +681,12 @@ boundary computation results.
 
 The summary script checks:
 
-- that all 36 expected \((n,N)\) instances are present;
+- that all 36 expected $(n,N)$ instances are present;
 - that there are no duplicate instances;
 - that there are no unexpected instances;
 - that the filename agrees with the metadata stored inside the file;
-- that \(N=R-1\) has status SAT;
-- that \(N=R\) has status UNSAT;
+- that $N=R-1$ has status SAT;
+- that $N=R$ has status UNSAT;
 - that all result files can be parsed correctly.
 
 The output table is written to
@@ -707,23 +714,23 @@ results is incomplete or inconsistent.
 
 ## 13. Claimed exact values and corresponding certificates
 
-For each claimed exact value \(R\), the repository supplies
+For each claimed exact value $R$, the repository supplies
 
-- a verified SAT coloring witness on \(K_{R-1}\), proving
+- a verified SAT coloring witness on $K_{R-1}$, proving
 
-  $$
-  R_<\ge R;
-  $$
+$$
+R_{<}\ge R;
+$$
 
-- a verified UNSAT certificate for the CNF on \(K_R\), proving
+- a verified UNSAT certificate for the CNF on $K_R$, proving
 
-  $$
-  R_<\le R.
-  $$
+$$
+R_{<}\le R.
+$$
 
 The corresponding instances are as follows.
 
-| \(n\) | Claimed exact value \(R\) | SAT lower witness | UNSAT upper instance |
+| $n$ | Claimed exact value $R$ | SAT lower witness | UNSAT upper instance |
 |---:|---:|---|---|
 | 3 | 5 | `results/n3_N4_SAT.txt` | `cnf/n3_N5.cnf` |
 | 4 | 6 | `results/n4_N5_SAT.txt` | `cnf/n4_N6.cnf` |
@@ -873,24 +880,24 @@ This separation reduces reliance on a single program or SAT solver.
 
 ## 16. Reproducibility principle
 
-For a claimed exact value \(R\), a verified avoiding coloring on
-\(K_{R-1}\) proves
+For a claimed exact value $R$, a verified avoiding coloring on
+$K_{R-1}$ proves
 
 $$
-R_<\ge R.
+R_{<}\ge R.
 $$
 
-A verified UNSAT certificate for the complete CNF instance on \(K_R\)
+A verified UNSAT certificate for the complete CNF instance on $K_R$
 proves
 
 $$
-R_<\le R.
+R_{<}\le R.
 $$
 
 Therefore,
 
 $$
-R_<\bigl(
+R_{<}\bigl(
 \mathcal S_{1,3},
 (\mathcal P_n,\triangleleft_{\mathrm{alt}})
 \bigr)
@@ -898,7 +905,7 @@ R_<\bigl(
 R.
 $$
 
-For the current range \(3\le n\le20\), the repository contains
+For the current range $3\le n\le20$, the repository contains
 
 ```text
 SAT witnesses:
